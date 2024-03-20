@@ -7,13 +7,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
-// import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import '../../call/call_controller.dart';
 import '../../call/call_pick_screen.dart';
 import '../../controllers/data_controller.dart';
 import '../../utils/AppColors.dart';
 import 'notification.dart';
-
 
 class Chat extends StatefulWidget {
   final String? image, name, groupId, fcmToken, uid;
@@ -38,8 +36,6 @@ class _ChatState extends State<Chat> {
 
 // Encrypt message
 
-
-
   DataController dataController = Get.put(DataController());
   CallController callController = Get.put(CallController());
   TextEditingController messageController = TextEditingController();
@@ -54,6 +50,7 @@ class _ChatState extends State<Chat> {
     super.initState();
     dataController = Get.find<DataController>();
     myUid = FirebaseAuth.instance.currentUser!.uid;
+    // PermissionUtil.requestAll();
   }
 
   void makeCall(BuildContext context) {
@@ -71,310 +68,300 @@ class _ChatState extends State<Chat> {
     screenwidth = MediaQuery.of(context).size.width;
 
     return CallPickupScreen(
-      scaffold: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: Row(
-            children: [
-              widget.image!.isEmpty
-                  ? const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.blue,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
-                      ),
-                    )
-                  : CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(widget.image!),
-                    ),
-              const SizedBox(
-                width: 5,
-              ),
-              Column(
-                children: [
-                  Text(
-                     widget.name.toString(),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          leading: Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  Get.back();
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(left: 12),
-                  height: 30,
-                  width: 30,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.phone,
-                color: Colors.amber,
-              ),
-            ),
-            IconButton(
-              onPressed: ()async {
-                //  DocumentSnapshot<Map<String, dynamic>> document =
-                //                 await FirebaseFirestore.instance
-                //                     .collection('users')
-                //                     .doc(FirebaseAuth.instance.currentUser!.uid)
-                //                     .get();
-                //             final userData = document.data()!;
-                //             String userName = userData['username'];
-
-
-                 makeCall(context);
-                //     LocalNotificationService.sendNotification(
-                //         title: 'Incoming call from $userName',
-                //         message: '${widget.name} sent you an image',
-                //         token: widget.fcmToken);
-                
-              
-              },
-              icon: const Icon(
-                Icons.video_call,
-                color: Colors.amber,
-              ),
-            ),
-          ],
-        ),
-       body: Column(
+        scaffold: Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Row(
           children: [
-            Expanded(
-                child: Obx(() => dataController.isMessageSending.value
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : StreamBuilder<QuerySnapshot>(
-                        builder: (ctx, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-
-                          List<DocumentSnapshot> data =
-                              snapshot.data!.docs.reversed.toList();
-
-                          return ListView.builder(
-                            reverse: true,
-                            itemBuilder: (ctx, index) {
-                              String messageUserId = data[index].get('uid');
-                              String messageType = data[index].get('type');
-
-                              Widget messageWidget = Container();
-
-                              if (messageUserId == myUid) {
-                                switch (messageType) {
-                                  case 'iSentText':
-                                    messageWidget =
-                                        textMessageISent(data[index]);
-                                    break;
-
-                                  case 'iSentImage':
-                                    messageWidget = imageSent(data[index]);
-                                    break;
-                                  case 'iSentReply':
-                                    messageWidget =
-                                        sentReplyTextToText(data[index]);
-                                }
-                              } else {
-                                switch (messageType) {
-                                  case 'iSentText':
-                                    messageWidget =
-                                        textMessageIReceived(data[index]);
-                                    break;
-
-                                  case 'iSentImage':
-                                    messageWidget = imageReceived(data[index]);
-                                    break;
-                                  case 'iSentReply':
-                                    messageWidget =
-                                        receivedReplyTextToText(data[index]);
-                                }
-                              }
-
-                              return messageWidget;
-                            },
-                            itemCount: data.length,
-                          );
-                        },
-                        stream: dataController.getMessage(
-                            widget.groupId, widget.uid)))),
+            widget.image!.isEmpty
+                ? const CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.blue,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                  )
+                : CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(widget.image!),
+                  ),
+            const SizedBox(
+              width: 5,
+            ),
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        
-                        child:
-                        MessageBar(
-                          
-                          onTextChanged: (p0) {
-                            messageController.text=p0;
-                          },
-              onSend: (_) async{
-                  if (messageController.text.isEmpty) {
-                              return;
-                            }
-                            String message = messageController.text;
-                            messageController.clear();
-
-                            Map<String, dynamic> data = {
-                              'type': 'iSentText',
-                              'message': message,
-                              'timeStamp': DateTime.now(),
-                              'uid': myUid
-                            };
-
-                            if (replyText.length > 0) {
-                              data['reply'] = replyText;
-                              data['type'] = 'iSentReply';
-                              replyText = '';
-                            }
-                            DocumentSnapshot<Map<String, dynamic>> document =
-                                await FirebaseFirestore.instance
-                                    .collection('lawyers')
-                                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                                    .get();
-                            final userData = document.data()!;
-                            String userName = userData['name'];
-                            String userImage = userData['image'];
-                            String fcmToken = userData['fcmToken'];
-
-                            dataController.sendMessageToFirebase(
-                                data: data,
-                                userId: widget.groupId.toString(),
-                                otherUserId: widget.uid.toString(),
-                                lastMessage: message,
-                                name: userName,
-                                image: userImage,
-                                fcmToken: fcmToken);
-
-                            dataController.createNotification(
-                              userId: widget.uid.toString(),
-                              message: message,
-                            );
-
-                            LocalNotificationService.sendNotification(
-                                title: 'New message from $userName',
-                                message: message,
-                                token: widget.fcmToken);
-                          
-                         
-              },
-              sendButtonColor: Colors.green,
-              messageBarColor: Colors.grey.shade200,
-              actions: [
-                InkWell(
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                  onTap: () {
-                    openMediaDialog();
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 6, right: 6),
-                  child: InkWell(
-                    child: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.green,
-                      size: 24,
-                    ),
-                    onTap: () async{
-                         final ImagePicker _picker = ImagePicker();
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.camera);
-                  if (image != null) {
-                    // Navigator.pop(context);
-
-                    dataController.isMessageSending(true);
-
-                    String imageUrl = await dataController
-                        .uploadImageToFirebase(File(image.path));
-
-                    Map<String, dynamic> data = {
-                      'type': 'iSentImage',
-                      'message': imageUrl,
-                      'timeStamp': DateTime.now(),
-                      'uid': myUid
-                    };
-                    DocumentSnapshot<Map<String, dynamic>> document =
-                        await FirebaseFirestore.instance
-                            .collection('lawyers')
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .get();
-                    final userData = document.data()!;
-                    String userName = userData['name'];
-                    String userImage = userData['image'];
-                    String fcmToken = userData['fcmToken'];
-                    dataController.sendMessageToFirebase(
-                        data: data,
-                        userId: widget.groupId.toString(),
-                        otherUserId: widget.uid.toString(),
-                        lastMessage: 'Image',
-                        name: userName,
-                        image: userImage,
-                        fcmToken: fcmToken);
-
-                    dataController.createNotification(
-                      userId: widget.uid.toString(),
-                      message: 'sent you an image',
-                    );
-
-                    LocalNotificationService.sendNotification(
-                        title: 'New message from $userName',
-                        message: '$userName sent you an image',
-                        token: widget.fcmToken);}
-                    },
-                  ),
-                ),
-              ],
-            ),
-                      ),
-                        
-                     
-                     
-                     ],
+                Text(
+                  widget.name.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.black,
                   ),
                 ),
               ],
             ),
           ],
         ),
-      
-     ) );
+        leading: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                margin: const EdgeInsets.only(left: 12),
+                height: 30,
+                width: 30,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.phone,
+              color: Colors.amber,
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              //  DocumentSnapshot<Map<String, dynamic>> document =
+              //                 await FirebaseFirestore.instance
+              //                     .collection('users')
+              //                     .doc(FirebaseAuth.instance.currentUser!.uid)
+              //                     .get();
+              //             final userData = document.data()!;
+              //             String userName = userData['username'];
+
+              makeCall(context);
+              //     LocalNotificationService.sendNotification(
+              //         title: 'Incoming call from $userName',
+              //         message: '${widget.name} sent you an image',
+              //         token: widget.fcmToken);
+            },
+            icon: const Icon(
+              Icons.video_call,
+              color: Colors.amber,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+              child: Obx(() => dataController.isMessageSending.value
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : StreamBuilder<QuerySnapshot>(
+                      builder: (ctx, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        List<DocumentSnapshot> data =
+                            snapshot.data!.docs.reversed.toList();
+
+                        return ListView.builder(
+                          reverse: true,
+                          itemBuilder: (ctx, index) {
+                            String messageUserId = data[index].get('uid');
+                            String messageType = data[index].get('type');
+
+                            Widget messageWidget = Container();
+
+                            if (messageUserId == myUid) {
+                              switch (messageType) {
+                                case 'iSentText':
+                                  messageWidget = textMessageISent(data[index]);
+                                  break;
+
+                                case 'iSentImage':
+                                  messageWidget = imageSent(data[index]);
+                                  break;
+                                case 'iSentReply':
+                                  messageWidget =
+                                      sentReplyTextToText(data[index]);
+                              }
+                            } else {
+                              switch (messageType) {
+                                case 'iSentText':
+                                  messageWidget =
+                                      textMessageIReceived(data[index]);
+                                  break;
+
+                                case 'iSentImage':
+                                  messageWidget = imageReceived(data[index]);
+                                  break;
+                                case 'iSentReply':
+                                  messageWidget =
+                                      receivedReplyTextToText(data[index]);
+                              }
+                            }
+
+                            return messageWidget;
+                          },
+                          itemCount: data.length,
+                        );
+                      },
+                      stream: dataController.getMessage(
+                          widget.groupId, widget.uid)))),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: MessageBar(
+                        onTextChanged: (p0) {
+                          messageController.text = p0;
+                        },
+                        onSend: (_) async {
+                          if (messageController.text.isEmpty) {
+                            return;
+                          }
+                          String message = messageController.text;
+                          messageController.clear();
+
+                          Map<String, dynamic> data = {
+                            'type': 'iSentText',
+                            'message': message,
+                            'timeStamp': DateTime.now(),
+                            'uid': myUid
+                          };
+
+                          if (replyText.length > 0) {
+                            data['reply'] = replyText;
+                            data['type'] = 'iSentReply';
+                            replyText = '';
+                          }
+                          DocumentSnapshot<Map<String, dynamic>> document =
+                              await FirebaseFirestore.instance
+                                  .collection('lawyers')
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .get();
+                          final userData = document.data()!;
+                          String userName = userData['name'];
+                          String userImage = userData['image'];
+                          String fcmToken = userData['fcmToken'];
+
+                          dataController.sendMessageToFirebase(
+                              data: data,
+                              userId: widget.groupId.toString(),
+                              otherUserId: widget.uid.toString(),
+                              lastMessage: message,
+                              name: userName,
+                              image: userImage,
+                              fcmToken: fcmToken);
+
+                          dataController.createNotification(
+                            userId: widget.uid.toString(),
+                            message: message,
+                          );
+
+                          LocalNotificationService.sendNotification(
+                              title: 'New message from $userName',
+                              message: message,
+                              token: widget.fcmToken);
+                        },
+                        sendButtonColor: Colors.green,
+                        messageBarColor: Colors.grey.shade200,
+                        actions: [
+                          InkWell(
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.black,
+                              size: 24,
+                            ),
+                            onTap: () {
+                              openMediaDialog();
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6, right: 6),
+                            child: InkWell(
+                              child: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.green,
+                                size: 24,
+                              ),
+                              onTap: () async {
+                                final ImagePicker _picker = ImagePicker();
+                                final XFile? image = await _picker.pickImage(
+                                    source: ImageSource.camera);
+                                if (image != null) {
+                                  // Navigator.pop(context);
+
+                                  dataController.isMessageSending(true);
+
+                                  String imageUrl = await dataController
+                                      .uploadImageToFirebase(File(image.path));
+
+                                  Map<String, dynamic> data = {
+                                    'type': 'iSentImage',
+                                    'message': imageUrl,
+                                    'timeStamp': DateTime.now(),
+                                    'uid': myUid
+                                  };
+                                  DocumentSnapshot<Map<String, dynamic>>
+                                      document = await FirebaseFirestore
+                                          .instance
+                                          .collection('lawyers')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                          .get();
+                                  final userData = document.data()!;
+                                  String userName = userData['name'];
+                                  String userImage = userData['image'];
+                                  String fcmToken = userData['fcmToken'];
+                                  dataController.sendMessageToFirebase(
+                                      data: data,
+                                      userId: widget.groupId.toString(),
+                                      otherUserId: widget.uid.toString(),
+                                      lastMessage: 'Image',
+                                      name: userName,
+                                      image: userImage,
+                                      fcmToken: fcmToken);
+
+                                  dataController.createNotification(
+                                    userId: widget.uid.toString(),
+                                    message: 'sent you an image',
+                                  );
+
+                                  LocalNotificationService.sendNotification(
+                                      title: 'New message from $userName',
+                                      message: '$userName sent you an image',
+                                      token: widget.fcmToken);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
   }
 
   textMessageIReceived(DocumentSnapshot doc) {
@@ -427,7 +414,6 @@ class _ChatState extends State<Chat> {
                 Padding(
                   padding: const EdgeInsets.only(left: 62, top: 5),
                   child: Text(
-
                     DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
                     style: const TextStyle(color: Colors.black),
                   ),
@@ -481,7 +467,7 @@ class _ChatState extends State<Chat> {
             Padding(
               padding: const EdgeInsets.only(top: 5, right: 20),
               child: Text(
-                    DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
+                DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
 
                 // DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                 style: const TextStyle(color: Colors.black),
@@ -543,7 +529,7 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(
-                    DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
+                  DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
 
                   // DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                   style: const TextStyle(color: Colors.black),
@@ -608,7 +594,6 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: const EdgeInsets.only(left: 62, top: 5),
                 child: Text(
-                  
                   DateFormat.MMMd().format(doc.get('timeStamp').toDate()),
                   style: const TextStyle(color: Colors.black),
                 ),
@@ -619,7 +604,7 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
-                    DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
+                  DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
 
                   // DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                   style: const TextStyle(color: Colors.black),
@@ -724,8 +709,8 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(
-                    DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
-                  
+                  DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
+
                   // DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                   style: const TextStyle(color: Colors.black),
                 ),
@@ -786,7 +771,6 @@ class _ChatState extends State<Chat> {
               ),
               BubbleSpecialOne(
                   text: reply,
-                  
                   color: Colors.green,
                   textStyle: const TextStyle(
                       fontSize: 13,
@@ -837,8 +821,8 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(
-                    // DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
-                    DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
+                  // DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
+                  DateFormat('hh:mm a').format(doc.get('timeStamp').toDate()),
 
                   // DateFormat.Hm().format(doc.get('timeStamp').toDate()),
                   style: const TextStyle(color: Colors.black),
@@ -850,6 +834,7 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
+
   void openMediaDialog() {
     showDialog(
       context: context,
@@ -969,4 +954,6 @@ class _ChatState extends State<Chat> {
       },
     );
   }
+
+  
 }
