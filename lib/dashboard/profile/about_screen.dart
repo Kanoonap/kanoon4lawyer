@@ -283,212 +283,196 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Container(
+                height: 30,
+                width: 30,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(width: Get.width * .28),
+            const Text(
+              'About',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF1A1A1A),
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        elevation: 1,
+      ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child:
-        
-        
-        
-        
-         Column(
-           children: [
+        child: Column(
+          children: [
             const SizedBox(
-              height: 38,
+              height: 8,
             ),
-             Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: Get.width * .28),
-                      const Text(
-                        'About',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF1A1A1A),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                const SizedBox(
-                  height: 11,
-                ),
-             const Padding(
-               padding: EdgeInsets.symmetric(horizontal: 18,vertical: 6
-               ),
-               child: Column(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 
-                  Text(
-                    'Title: Kanoon App\nYour Personal Legal Companion\n\nDescription:',
+                  const Text(
+                    'Title: Kanoon4Lawyers\nElevate Your Legal Practice\n\nDescription:',
                     style: TextStyle(
                       color: Color(0xFF1A1A1A),
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
-                  Text(
-                    'Welcome to Kanoon App, your ultimate solution for all legal needs right at your fingertips. With Kanoon app user-friendly interface and comprehensive features, managing your legal affairs has never been easier',
-                    textAlign: TextAlign.center,
+                  const Text(
+                    'Welcome to Kanoon4Lawyers , the ultimate platform designed to streamline and enhance your legal practice. Whether you are a seasoned attorney or a budding legal professional, Kanoon4Lawyers empowers you with the tools and resources needed to excel in your field.' // textAlign: TextAlign.center,
+                    ,
                     style: TextStyle(),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Text(
                     'Key Features :',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.red.shade400,
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 22,
                   ),
                   Text(
-                    'Find Your Perfect Lawyer :',
+                    'Client Management :',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.blue.shade400,
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text(
+                      ' Seamlessly manage your client base with Kanoon4Lawyers Connect intuitive client management system. Keep track of client details, case histories, appointments, and communications all in one centralized location.' // textAlign: TextAlign.center,
+                      ),
+                  const SizedBox(
                     height: 16,
                   ),
                   Text(
-                    'Browse through a diverse database of experienced lawyers specializing in various fields of law. Whether you need a criminal defense attorney, a family law expert, or a business law consultant, Kanoon App has got you covered.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'Book Appointments Instantly :',
+                    'Appointments Scheduling :',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.blue.shade400,
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
-                    'No more waiting on hold or playing phone tag. With Kanoon App, booking appointments with your preferred lawyer is just a few taps away. Choose your preferred time slot and schedule appointments hassle-free.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
+                  const Text(
+                      'Effortlessly schedule appointments with clients using kanoon4Lawyers Connect convenient scheduling feature. Set availability, manage calendar events, and sync appointments across devices for efficient time management.' // textAlign: TextAlign.center,
+                      ),
+                  const SizedBox(
                     height: 16,
                   ),
                   Text(
                     'Secure Communication :',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.blue.shade400,
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text(
+                    'Communicate with your Client securely through the app encrypted messaging system. Discuss your case details, share documents, and receive legal advice conveniently without compromising on privacy.',
+                    // textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
                     height: 16,
                   ),
                   Text(
-                    'Communicate with your lawyer securely through the app encrypted messaging system. Discuss your case details, share documents, and receive legal advice conveniently without compromising on privacy.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'Review and Ratings :',
+                    'Task Management :',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.blue.shade400,
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text(
+                      'Stay organized and productive with LawPro Connect task management tools. Assign tasks to team members, set deadlines, and track progress to ensure timely completion of legal assignments.' // textAlign: TextAlign.center,
+                      // textAlign: TextAlign.center,
+                      ),
+                  const SizedBox(
                     height: 16,
                   ),
                   Text(
-                    'Share your experience and rate the services provided by your lawyer. Help fellow users make informed decisions by leaving honest reviews.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    '24/7 Support :',
+                    'Client Portal :',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.blue.shade400,
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text(
+                      'Provide clients with access to their case information, documents, and appointment schedules through kanoon4lawyer Connect secure client portal. Enhance transparency and communication while fostering client trust and satisfaction.' // textAlign: TextAlign.center,
+                      ),
+                  const SizedBox(
                     height: 16,
                   ),
                   Text(
-                    'Have questions or need assistance? Our dedicated support team is available round-the-clock to address your concerns and provide timely assistance.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'Why Choose kanoon App ?',
+                    'Why Choose kanoon4Lawyer ?',
                     style: TextStyle(
-                      color: Color(0xFF1A1A1A),
+                      color: Colors.blue.shade400,
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
-                    'Kanoon App simplifies the legal process, putting the power of legal representation in your hands. Whether you are facing a legal challenge or seeking preventive legal advice, Kanoon App ensures that you have access to top-notch legal professionals whenever and wherever you need them.',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
+                  const Text(
+                      'kanoon4Lawyer Connect is more than just a software platform—it is your partner in legal excellence. Whether you are looking to streamline operations, improve client communication, or enhance productivity, kanoon4Lawyer Connect offers the tools and support you need to succeed in today dynamic legal landscape' // textAlign: TextAlign.center,
+                      ),
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
-                    'Download Kanoon App today and experience a revolutionary approach to managing your legal affairs. Empower yourself with knowledge, expertise, and convenience—all within the palm of your hand. Kanoon App: Your Personal Legal Companion.',
-                    textAlign: TextAlign.center,
-                  ),
-                 ],
-                         ),
-             ),
-           ],
-         ),
+                  const Text(
+                      'Join the ranks of top legal professionals who trust kanoon4Lawyer Connect to elevate their practice and deliver exceptional service to clients. Experience the future of legal practice management with kanoon4Lawyer Connect today.' // textAlign: TextAlign.center,
+                      ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-

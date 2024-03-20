@@ -11,13 +11,6 @@ import 'package:uuid/uuid.dart';
 class DataController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  DocumentSnapshot? myDocument;
-
-  var allUsers = <DocumentSnapshot>[].obs;
-  var filteredUsers = <DocumentSnapshot>[].obs;
-  var allEvents = <DocumentSnapshot>[].obs;
-  var filteredEvents = <DocumentSnapshot>[].obs;
-  var joinedEvents = <DocumentSnapshot>[].obs;
 
   var isEventsLoading = false.obs;
 

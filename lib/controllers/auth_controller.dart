@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kanoon4lawyers/authentication/degree_data.dart';
 import 'package:kanoon4lawyers/dashboard/dashboard.dart';
 import 'package:kanoon4lawyers/models/account_model.dart';
 import 'package:ndialog/ndialog.dart';
@@ -111,9 +112,11 @@ class AuthController extends GetxController {
             .set(accountModel.toJson());
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: 'Sign Up Successfully');
-        Get.off(() => const Dashboard());
+        Get.off(() => const DegreeData());
       }
     } on FirebaseAuthException catch (e) {
+      Get.snackbar('Error', e.toString());
+
       progressDialog.dismiss();
       if (e.code == 'email-already-in-use') {
         Fluttertoast.showToast(msg: 'Email already in use');
@@ -142,9 +145,26 @@ class AuthController extends GetxController {
     ProgressDialog progressDialog = ProgressDialog(context,
         title: const Text('Signing In'), message: const Text('Please wait'));
     progressDialog.show();
+     
+   
+    
+  
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
+          
+      final location = await getCurrentLocation();
+  
+    
+        progressDialog.show();
+      await FirebaseFirestore.instance
+          .collection('lawyers')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+              'longitude': location.longitude.toString(),
+        'latitude': location.latitude.toString(),
+        
+      });
       if (userCredential.user != null) {
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: 'Login Successfully');
@@ -152,14 +172,10 @@ class AuthController extends GetxController {
         Get.off(() => const Dashboard());
       }
     } on FirebaseAuthException catch (e) {
+      Get.snackbar('Error', e.toString());
+
       progressDialog.dismiss();
-      if (e.code == 'email-already-in-use') {
-        Fluttertoast.showToast(msg: 'Email already in use');
-        return;
-      } else if (e.code == 'weak-password') {
-        Fluttertoast.showToast(msg: 'Password is weak');
-        return;
-      } else if (e.code == 'wrong-password') {
+      if (e.code == 'wrong-password') {
         Fluttertoast.showToast(msg: 'Invalid Password');
       } else if (e.code == 'invalid-email') {
         Fluttertoast.showToast(msg: 'Invalid Email');
@@ -276,7 +292,7 @@ class AuthController extends GetxController {
           .collection('lawyers')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .set({'available': 'All Time Available'}, SetOptions(merge: true));
-      Fluttertoast.showToast(msg: 'Schedule saved successfully!');
+      Fluttertoast.showToast(msg: 'Schedule updated successfully!');
 
       progressDialog.dismiss();
     } catch (e) {
